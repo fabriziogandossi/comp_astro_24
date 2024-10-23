@@ -1,3 +1,0 @@
-commit 7efc6ec7b27d3326a1627cf1addfb58614ed6960 (HEAD -> assignment1_taskC, origin/assignment1_taskC)
-Author: fabriziogandossi <fabriziogandossi.ita@gmail.com>
-Date:   Fri Oct 18 11:00:37 2024 +0200

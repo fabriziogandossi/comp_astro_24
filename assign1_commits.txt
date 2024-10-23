@@ -1,0 +1,58 @@
+Silvia
+
+commit 265950714d52a50107f658eca83e6e41f8a1d03d (ca24_remote/main)
+Author: Tiziano Zingales <tiziano.zingales@gmail.com>
+Date:   Wed Oct 16 23:12:09 2024 +0200
+
+    added a description for the parameters submodule
+
+
+
+commit ee73006940755e6894aabbc172afd0893aaaeb36 (HEAD -> assignment1_taskC)
+Author: silviacocchi <silvia.cocchi@studenti.unipd.it>
+Date:   Fri Oct 18 10:16:48 2024 +0200
+
+    filestaskCsilvia
+
+
+commit d1b9b4183f3f504128007dd7ccd404140107d9a5 (HEAD -> main)
+Author: silviacocchi <silvia.cocchi@studenti.unipd.it>
+Date:   Fri Oct 18 12:38:41 2024 +0200
+
+    task E in the main
+
+
+
+
+
+Elena
+
+commit c3edbfc781452126d9aac34ad9b1d3155f4664b4 (HEAD -> assignment1_taskC, origin/assignment1_taskC)
+Author: ElenaMagnoni <elena.magnoni@studenti.unipd.it>
+Date:   Wed Oct 23 13:23:08 2024 +0200
+
+    adding file assignment
+    
+    
+
+
+
+
+
+commit 5a339d3c01f67b8e2070ac8b3d214a9631299170 (HEAD -> main)
+Merge: d1b9b41 c3edbfc
+Author: ElenaMagnoni <elena.magnoni@studenti.unipd.it>
+Date:   Wed Oct 23 13:34:16 2024 +0200
+
+    Merge branch 'assignment1_taskC'
+    Merging the branch assignment1_taskC with the main trough the method merge
+    
+    
+    
+    
+    
+Fabrizio
+
+commit 7efc6ec7b27d3326a1627cf1addfb58614ed6960 (HEAD -> assignment1_taskC, origin/assignment1_taskC)
+Author: fabriziogandossi <fabriziogandossi.ita@gmail.com>
+Date:   Fri Oct 18 11:00:37 2024 +0200
