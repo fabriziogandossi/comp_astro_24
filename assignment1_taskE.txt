@@ -1,4 +1,4 @@
-# packages in environment at /home/silvia/miniconda3/envs/compastro_virt:
+# packages in environment 
 #
 # Name                    Version                   Build  Channel
 _libgcc_mutex             0.1                        main  
