@@ -15,14 +15,14 @@ jupiter_radius = const.R_jup.value  # in meters
 R_star = 0.79 * solar_radius  # Stellar radius of WASP-52 in meters (estimated)
 
 # Path to your YAML file (replace with actual path if needed)
-yaml_file_path = '/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/comp_astro_24_prova/src/daneel/transitparameters.yaml'
+#yaml_file_path = '/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/comp_astro_24_prova/src/daneel/transitparameters.yaml'
 
 # Load parameters from the YAML file
-params = load_parameters(yaml_file_path)
+#params = load_parameters(yaml_file_path)
 
 # Print loaded parameters to check
-print("Loaded Parameters:")
-print(params)
+#print("Loaded Parameters:")
+#print(params)
 
 def plot_transit(input_pars):
     """
