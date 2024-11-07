@@ -2,6 +2,7 @@ import datetime
 import argparse
 from daneel.parameters import Parameters
 from daneel.detection import *
+from daneel.transit import plot_transit
 
 
 def main():
@@ -34,6 +35,15 @@ def main():
         action="store_true",
     )
 
+    parser.add_argument(
+        "-t",
+        "--transit",
+        dest="transit",  # Corrected to use "transit" as the destination
+        required=False,
+        help="Plot transit light curve",
+        action="store_true",
+    )
+
     args = parser.parse_args()
 
     """Launch Daneel"""
@@ -42,10 +52,13 @@ def main():
 
     input_pars = Parameters(args.input_file).params
 
+    if args.transit:
+        plot_transit(input_pars)
+
     if args.detect:
         pass
-    if args.atmosphere:
-        pass
+    #if args.atmosphere:
+    #   pass
 
     finish = datetime.datetime.now()
     print(f"Daneel finishes at {finish}")

@@ -1,0 +1,12 @@
+# Parameters for the WASP-52 b transit model
+
+t0: 0.0  # Time of inferior conjunction (days)
+per: 1.74977083  # Orbital period (days)
+rp: 1.27  # Planet radius in Jupiter radii (converted to units of stellar radii in the code)
+a: 0.0272  # Semi-major axis in AU (Astronomical Units, converted to stellar radii in the code)
+inc: 85.35  # Orbital inclination (degrees)
+ecc: 0.0  # Eccentricity
+w: 90.0  # Longitude of periastron (degrees)
+u: [0.1, 0.3]  # Limb darkening coefficients
+limb_dark: "quadratic"  # Limb darkening model (choose from "linear" or "quadratic")
+
