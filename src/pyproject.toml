@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "daneel"
+version = "0.0.1"
+authors = [{ name = "Tiziano Zingales", email = "tiziano.zingales@unipd.it" }]
+description = "A practical example to detect and characterize exoplanets"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["PyYAML"]
+
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+daneel = "daneel.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/tiziano1590/comp_astro_24"
+Issues = "https://github.com/tiziano1590/comp_astro_24/issues"

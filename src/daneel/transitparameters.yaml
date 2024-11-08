@@ -7,6 +7,6 @@ a: 0.0272  # Semi-major axis in AU (Astronomical Units, converted to stellar rad
 inc: 85.35  # Orbital inclination (degrees)
 ecc: 0.0  # Eccentricity
 w: 90.0  # Longitude of periastron (degrees)
-u: [0.1, 0.3]  # Limb darkening coefficients
+u: [0.153, 0.467]   # Limb darkening coefficients computed through limb darkening calculator
 limb_dark: "quadratic"  # Limb darkening model (choose from "linear" or "quadratic")
 

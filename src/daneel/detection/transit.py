@@ -17,7 +17,7 @@ params.a = (0.0272 * 1.496e11) / R_star  # Semi-major axis in meters, then in st
 params.inc = 85.35                    # Orbital inclination (in degrees)
 params.ecc = 0.                       # Eccentricity
 params.w = 90.                        # Longitude of periastron (in degrees)
-params.u = [0.1, 0.3]                 # Limb darkening coefficients
+params.u = [[0.153, 0.467]                   # Limb darkening coefficients
 params.limb_dark = "quadratic"        # Limb darkening model
 
 # Time array for light curve calculation
