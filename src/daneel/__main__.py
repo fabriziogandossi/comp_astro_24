@@ -1,8 +1,7 @@
 import datetime
 import argparse
 from daneel.parameters import Parameters
-from daneel.detection import *
-from daneel.transit import plot_transit
+from daneel.detection.transit import plot_transit
 
 
 def main():
