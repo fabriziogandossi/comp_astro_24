@@ -36,7 +36,9 @@ def plot_transit(input_pars):
     t = np.linspace(-0.06, 0.06, 1000)
 
     # Initialize the transit model and calculate the light curve
+    radius=[rp]
     radii = [rp, rp / 2]
+    radii_2 = [rp, rp / 2,2*rp]
 
     # Plot the light curve
     batman_params = batman.TransitParams()
@@ -50,6 +52,31 @@ def plot_transit(input_pars):
     batman_params.limb_dark = limb_dark
 
    
+    plt.figure()
+
+    for rp in radius:
+
+        batman_params.rp = rp
+
+        m = batman.TransitModel(batman_params, t)
+        flux = m.light_curve(batman_params)
+
+    
+        label = f"Planet Radius = {rp:.3f} Stellar Radii"
+        plt.plot(t, flux, label=label)
+        
+        
+    plt.legend()
+    plt.xlabel("Time from central transit (days)")
+    plt.ylabel("Relative flux")
+    plt.ylim((0.968, 1.005))
+    plt.title("Transit Light Curve WASP-52 b")
+    plt.grid()
+    plt.savefig("assignment2_taskA.png") 
+    plt.show()
+
+
+
     plt.figure()
 
     for rp in radii:
@@ -70,7 +97,30 @@ def plot_transit(input_pars):
     plt.ylim((0.968, 1.005))
     plt.title("Transit Light Curve WASP-52 b")
     plt.grid()
-    plt.savefig("transit_light_curve_2.png") 
+    plt.savefig("assignment2_taskB.png") 
     plt.show()
    
+
+    plt.figure()
+
+    for rp in radii_2:
+
+        batman_params.rp = rp
+
+        m = batman.TransitModel(batman_params, t)
+        flux = m.light_curve(batman_params)
+
+        
+        label = f"Planet Radius = {rp:.3f} Stellar Radii"
+        plt.plot(t, flux, label=label)
+            
+        
+    plt.legend()
+    plt.xlabel("Time from central transit (days)")
+    plt.ylabel("Relative flux")
+    plt.ylim((0.880, 1.005))
+    plt.title("Transit Light Curve WASP-52 b")
+    plt.grid()
+    plt.savefig("assignment2_taskC.png") 
+    plt.show()
     
