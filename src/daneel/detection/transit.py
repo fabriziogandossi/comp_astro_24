@@ -26,11 +26,11 @@ def plot_transit(input_pars):
     t0 = input_pars['t0']  # Time of inferior conjunction
     per = input_pars['per']  # Orbital period (days)
     rp = input_pars['rp']  # Planet radius (in units of stellar radii)
-    a = (input_pars['a'] * 1.496e11) / R_star # Semi-major axis in stellar radii
+    a = input_pars['a']  # Semi-major axis in stellar radii
     inc = input_pars['inc']  # Orbital inclination (degrees)
     ecc = input_pars['ecc']  # Eccentricity
     w = input_pars['w']  # Longitude of periastron (degrees)
-    u = input_pars['u']  # Limb darkening coefficients
+    u_list = input_pars['u']  # Limb darkening coefficients
     limb_dark = input_pars['limb_dark']  # Limb darkening model
 
     # Time array for light curve calculation
@@ -41,27 +41,28 @@ def plot_transit(input_pars):
 
     # Plot the light curve
     batman_params = batman.TransitParams()
-    batman_params.t0 = t0
-    batman_params.per = per
-    batman_params.a = a
-    batman_params.inc = inc
-    batman_params.ecc = ecc
-    batman_params.w = w
-    batman_params.u = u
-    batman_params.limb_dark = limb_dark
 
-   
     plt.figure()
 
-    for r in rp:
+    for i in range(len(rp)):
 
-        batman_params.rp = r* jupiter_radius/ R_star 
+        batman_params.t0 = t0[i]
+        batman_params.per = per[i]
+        batman_params.a = a[i]* 1.496e11 / R_star
+        batman_params.inc = inc[i]
+        batman_params.ecc = ecc[i]
+        batman_params.w = w[i]
+        batman_params.u = u_list[i]  # Use the ith set of limb darkening coefficients
+        batman_params.limb_dark = limb_dark
+
+
+        batman_params.rp = rp[i]* jupiter_radius/ R_star 
 
         m = batman.TransitModel(batman_params, t)
         flux = m.light_curve(batman_params)
 
     
-        label = f"Planet Radius = {r:.3f} Stellar Radii"
+        label = f"Planet Radius = {rp[i]:.3f} Stellar Radii"
         plt.plot(t, flux, label=label)
         
         
