@@ -9,10 +9,7 @@ def load_parameters(file_path):
     with open(file_path, 'r') as file:
         return yaml.safe_load(file)
 
-# Constants (only needed if you need them for other parts of the code)
-solar_radius = const.R_sun.value  # in meters
-jupiter_radius = const.R_jup.value  # in meters
-R_star = 0.79 * solar_radius  # Stellar radius of WASP-52 in meters (estimated)
+
 
 
 def plot_transit(input_pars):
@@ -30,8 +27,14 @@ def plot_transit(input_pars):
     inc = input_pars['inc']  # Orbital inclination (degrees)
     ecc = input_pars['ecc']  # Eccentricity
     w = input_pars['w']  # Longitude of periastron (degrees)
+    Rstar=input_pars['R_star']
     u_list = input_pars['u']  # Limb darkening coefficients
     limb_dark = input_pars['limb_dark']  # Limb darkening model
+
+    # Constants (only needed if you need them for other parts of the code)
+    solar_radius = const.R_sun.value  # in meters
+    jupiter_radius = const.R_jup.value  # in meters
+    
 
     # Time array for light curve calculation
     t = np.linspace(-0.06, 0.06, 1000)
@@ -45,7 +48,7 @@ def plot_transit(input_pars):
     plt.figure()
 
     for i in range(len(rp)):
-
+        R_star = Rstar[i] * solar_radius  # Stellar radius of WASP-52 in meters
         batman_params.t0 = t0[i]
         batman_params.per = per[i]
         batman_params.a = a[i]* 1.496e11 / R_star
