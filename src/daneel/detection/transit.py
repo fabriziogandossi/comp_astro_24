@@ -10,8 +10,6 @@ def load_parameters(file_path):
         return yaml.safe_load(file)
 
 
-
-
 def plot_transit(input_pars):
     """
     Function to plot the transit light curve using batman model.
@@ -20,6 +18,7 @@ def plot_transit(input_pars):
 
     # Define transit parameters from input_pars
     planet_name = input_pars['name']
+    title=input_pars['title']
     t0 = input_pars['t0']  # Time of inferior conjunction
     per = input_pars['per']  # Orbital period (days)
     rp = input_pars['rp']  # Planet radius (in units of stellar radii)
@@ -35,14 +34,10 @@ def plot_transit(input_pars):
     solar_radius = const.R_sun.value  # in meters
     jupiter_radius = const.R_jup.value  # in meters
     
-
     # Time array for light curve calculation
     t = np.linspace(-0.06, 0.06, 1000)
 
     # Initialize the transit model and calculate the light curve
-    
-
-    # Plot the light curve
     batman_params = batman.TransitParams()
 
     plt.figure()
@@ -56,24 +51,19 @@ def plot_transit(input_pars):
         batman_params.ecc = ecc[i]
         batman_params.w = w[i]
         batman_params.u = u_list[i]  # Use the ith set of limb darkening coefficients
-        batman_params.limb_dark = limb_dark
-
-
+        batman_params.limb_dark = limb_dark[i]
         batman_params.rp = rp[i]* jupiter_radius/ R_star 
 
         m = batman.TransitModel(batman_params, t)
         flux = m.light_curve(batman_params)
-
     
-        label = f"Planet Radius = {rp[i]:.3f} Stellar Radii"
+        label = f"{planet_name[i]}"
         plt.plot(t, flux, label=label)
-        
         
     plt.legend()
     plt.xlabel("Time from central transit (days)")
     plt.ylabel("Relative flux")
-    plt.ylim((0.880, 1.005))
-    plt.title(f"Transit Light Curve {planet_name}")
+    plt.title(f"{title}")
     plt.grid()
 
     filename = input("Enter the filename to save the figure (e.g., 'lightcurve.png'): ")
