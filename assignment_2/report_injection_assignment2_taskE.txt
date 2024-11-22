@@ -39,7 +39,7 @@ Confusion Matrix - Dev Set
 
 ###########################################
 
-SVC(kernel = ’linear’)
+model=SVC(kernel = ’linear’)
 
 Train Set Error 0.43758600353843125
 Dev Set Error 0.44561403508771935
