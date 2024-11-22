@@ -1,0 +1,39 @@
+model = linearSVC()
+
+Train Set Error 0.0
+Dev Set Error 0.012280701754386003
+------------
+Precision - Train Set 1.0
+Precision - Dev Set 0.4166666666666667
+------------
+Recall - Train Set 1.0
+Recall - Dev Set 1.0
+------------
+Confusion Matrix - Train Set
+[[5050    0]
+ [   0   37]]
+Confusion Matrix - Dev Set
+[[558   7]
+ [  0   5]]
+ 
+###########################################
+
+model = linearSVC(loss = 'hinge')
+
+Train Set Error 0.0
+Dev Set Error 0.007017543859649145
+------------
+Precision - Train Set 1.0
+Precision - Dev Set 0.5555555555555556
+------------
+Recall - Train Set 1.0
+Recall - Dev Set 1.0
+------------
+Confusion Matrix - Train Set
+[[5050    0]
+ [   0   37]]
+Confusion Matrix - Dev Set
+[[561   4]
+ [  0   5]]
+ 
+ ##########################################
