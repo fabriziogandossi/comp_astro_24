@@ -1,0 +1,157 @@
+1 layer, 1 neuron
+
+Saving model...
+train set error 0.5050127776685669
+dev set error 0.5614035087719298
+------------
+precision_train 0.6111111111111112
+precision_dev 0.47368421052631576
+------------
+recall_train 0.28067109402306883
+recall_dev 0.11392405063291139
+------------
+confusion_matrix_train
+[[1715  511]
+ [2058  803]]
+confusion_matrix_dev
+[[214  40]
+ [280  36]]
+------------
+Train Set Positive Predictions 1314
+Dev Set Positive Predictions 76
+------------
+All 0's error train set 0.007273442107332416
+All 0's error dev set 0.008771929824561403
+
+
+
+2 layers, 1 neuron each
+
+train set error 0.43758600353843125
+dev set error 0.44561403508771935
+------------
+precision_train 0.5624139964615688
+precision_dev 0.5543859649122806
+------------
+recall_train 1.0
+recall_dev 1.0
+------------
+confusion_matrix_train
+[[   0 2226]
+ [   0 2861]]
+confusion_matrix_dev
+[[  0 254]
+ [  0 316]]
+------------
+Train Set Positive Predictions 5087
+Dev Set Positive Predictions 570
+------------
+All 0's error train set 0.007273442107332416
+All 0's error dev set 0.008771929824561403
+
+
+
+2 layers, 1 neuron each, 1 dropout layer 0.2
+train set error 0.4452526046785925
+dev set error 0.49298245614035086
+------------
+precision_train 0.5718072289156626
+precision_dev 0.5454545454545454
+------------
+recall_train 0.8294302691366655
+recall_dev 0.6645569620253164
+------------
+confusion_matrix_train
+[[ 449 1777]
+ [ 488 2373]]
+confusion_matrix_dev
+[[ 79 175]
+ [106 210]]
+------------
+Train Set Positive Predictions 4150
+Dev Set Positive Predictions 385
+------------
+All 0's error train set 0.007273442107332416
+All 0's error dev set 0.008771929824561403
+
+
+
+3 layers, 16 neuron each
+train set error 0.4157656772164341
+dev set error 0.44385964912280707
+------------
+precision_train 0.5762469337694195
+precision_dev 0.5553602811950791
+------------
+recall_train 0.9853198182453687
+recall_dev 1.0
+------------
+confusion_matrix_train
+[[ 153 2073]
+ [  42 2819]]
+confusion_matrix_dev
+[[  1 253]
+ [  0 316]]
+------------
+Train Set Positive Predictions 4892
+Dev Set Positive Predictions 569
+------------
+All 0's error train set 0.007273442107332416
+All 0's error dev set 0.008771929824561403
+
+
+
+3 layers, 16 neuron each, 3 dropouts
+
+train set error 0.5624139964615686
+dev set error 0.5543859649122806
+------------
+precision_train 0.0
+precision_dev 0.0
+------------
+recall_train 0.0
+recall_dev 0.0
+------------
+confusion_matrix_train
+[[2226    0]
+ [2861    0]]
+confusion_matrix_dev
+[[254   0]
+ [316   0]]
+------------
+Train Set Positive Predictions 0
+Dev Set Positive Predictions 0
+------------
+All 0's error train set 0.007273442107332416
+All 0's error dev set 0.008771929824561403
+------------
+
+
+
+
+
+4 layers, 512 neuron each, 1 dropout layer at 0.2 after every other layer 
+
+train set error 0.5624139964615686
+dev set error 0.5543859649122806
+------------
+precision_train 0.0
+precision_dev 0.0
+------------
+recall_train 0.0
+recall_dev 0.0
+------------
+confusion_matrix_train
+[[2226    0]
+ [2861    0]]
+confusion_matrix_dev
+[[254   0]
+ [316   0]]
+------------
+Train Set Positive Predictions 0
+Dev Set Positive Predictions 0
+------------
+All 0's error train set 0.007273442107332416
+All 0's error dev set 0.008771929824561403
+
+
