@@ -1,0 +1,2 @@
+kernel: "rbf"  # Kernel type for SVM ('linear', 'poly', 'rbf', etc.)
+dataset_path: "path_to_your_dataset.csv"  # Path to the CSV dataset

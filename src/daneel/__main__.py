@@ -2,6 +2,7 @@ import datetime
 import argparse
 from daneel.parameters import Parameters
 from daneel.detection.transit import plot_transit
+from daneel.detection.svm_detector import SVMExoplanetDetector
 
 
 def main():
@@ -25,13 +26,14 @@ def main():
         action="store_true",
     )
     
-     parser.add_argument(
-        "-d svm",
-        "--detection svm",
-        dest="svm_detection",
+    parser.add_argument(
+        "-d",
+        "--detect",
+        dest="detect",
+        type=str,
         required=False,
-        help="Initialise detection algorithms for Exoplanets using a SVM",
-        action="store_true",
+        choices=["svm"],
+        help="Specify the detection method to use (e.g., 'svm').",
     )
 
     parser.add_argument(
@@ -67,6 +69,14 @@ def main():
         pass
     #if args.atmosphere:
     #   pass
+
+    # Run detection methods
+    if args.detect:
+        if args.detect == "svm":
+            kernel = input_pars.get("kernel", "linear")
+            dataset_path = input_pars.get("dataset_path", "dataset.csv")
+            detector = SVMExoplanetDetector(kernel=kernel, dataset_path=dataset_path)
+            detector.train_and_evaluate()
 
     finish = datetime.datetime.now()
     print(f"Daneel finishes at {finish}")
