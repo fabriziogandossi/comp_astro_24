@@ -15,16 +15,7 @@ def main():
         type=str,
         required=True,
         help="Input par file to pass",
-    )
-
-    parser.add_argument(
-        "-d",
-        "--detect",
-        dest="detect",
-        required=False,
-        help="Initialise detection algorithms for Exoplanets",
-        action="store_true",
-    )
+   )
     
     parser.add_argument(
         "-d",
@@ -32,8 +23,8 @@ def main():
         dest="detect",
         type=str,
         required=False,
-        choices=["svm"],
-        help="Specify the detection method to use (e.g., 'svm').",
+        choices=["svm", "nn", "cnn"],
+        help="Specify the detection method to use.",
     )
 
     parser.add_argument(
