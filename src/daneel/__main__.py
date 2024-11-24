@@ -24,6 +24,15 @@ def main():
         help="Initialise detection algorithms for Exoplanets",
         action="store_true",
     )
+    
+     parser.add_argument(
+        "-d svm",
+        "--detection svm",
+        dest="svm_detection",
+        required=False,
+        help="Initialise detection algorithms for Exoplanets using a SVM",
+        action="store_true",
+    )
 
     parser.add_argument(
         "-a",
