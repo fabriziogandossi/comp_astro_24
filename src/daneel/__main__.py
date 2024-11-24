@@ -2,7 +2,7 @@ import datetime
 import argparse
 from daneel.parameters import Parameters
 from daneel.detection.transit import plot_transit
-from daneel.detection.svm_detector import SVMExoplanetDetector
+from daneel.detection.svm import SVMExoplanetDetector
 
 
 def main():
