@@ -62,12 +62,28 @@ def main():
     #   pass
 
     # Run detection methods
-    if args.detect:
+    '''if args.detect:
         if args.detect == "svm":
             kernel = input_pars.get("kernel", "linear")
             dataset_path = input_pars.get("dataset_path", "dataset.csv")
             detector = SVMExoplanetDetector(kernel=kernel, dataset_path=dataset_path)
+            detector.train_and_evaluate()'''
+
+    if args.detect:
+        if args.detect == "svm":
+            # Fetch dataset paths for training and evaluation
+            train_dataset_path = input_pars.get("train_dataset_path", "")
+            eval_dataset_path = input_pars.get("eval_dataset_path", "")
+            kernel = input_pars.get("kernel", "linear")
+
+            # Initialize and run the SVM detector
+            detector = SVMExoplanetDetector(
+                kernel=kernel,
+                train_dataset_path=train_dataset_path,
+                eval_dataset_path=eval_dataset_path,
+            )
             detector.train_and_evaluate()
+
 
     finish = datetime.datetime.now()
     print(f"Daneel finishes at {finish}")

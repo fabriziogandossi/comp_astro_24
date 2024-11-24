@@ -1,2 +1,0 @@
-kernel: "linear"  # Kernel type for SVM ('linear', 'poly', 'rbf', etc.)
-dataset_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/data_no_injection/exoTest.csv"  # Path to the CSV dataset
