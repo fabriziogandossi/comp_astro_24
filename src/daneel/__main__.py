@@ -3,6 +3,7 @@ import argparse
 from daneel.parameters import Parameters
 from daneel.detection.transit import plot_transit
 from daneel.detection.svm import SVMExoplanetDetector
+from daneel.detection.nn import NeuralNetworkDetector
 
 
 def main():
@@ -82,6 +83,12 @@ def main():
                 train_dataset_path=train_dataset_path,
                 eval_dataset_path=eval_dataset_path,
             )
+            detector.train_and_evaluate()
+
+    if args.detect:
+        if args.detect == "nn":
+            nn_params = input_pars.get("nn", {})
+            detector = NeuralNetworkDetector(**nn_params)
             detector.train_and_evaluate()
 
 
