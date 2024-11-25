@@ -74,17 +74,23 @@ class NeuralNetworkDetector:
         df_dev_y = (df_eval["LABEL"] == 2).astype(int)
 
         return df_train_x, df_train_y, df_dev_x, df_dev_y
+    
+
+    
 
     def preprocess_data(self, df_train_x, df_train_y, df_dev_x, df_dev_y):
         print("Applying SMOTE to balance classes...")
-        sm = SMOTE()
-        df_train_x, df_train_y = sm.fit_resample(df_train_x, df_train_y)
+        #sm = SMOTE()
+        #df_train_x, df_train_y = sm.fit_resample(df_train_x, df_train_y)
+        
 
         print("Preprocessing data with Fourier Transform, Normalization, etc...")
-        processor = LightFluxProcessor()
-        df_train_x, df_dev_x = processor.process(df_train_x, df_dev_x)
+        processor = LightFluxProcessor()   #applying preprocess to the data already divided between data and labels
+        df_train_x, df_dev_x= processor.process(df_train_x, df_dev_x)
+        print(np.shape(df_train_x))
 
-        return df_train_x, df_train_y, df_dev_x, df_dev_y
+        return df_train_x, df_train_y, df_dev_x, df_dev_y  #the function just returns the values after the preprocessing
+
 
     def build_network(self, input_shape):
         model = tf.keras.models.Sequential()
@@ -107,20 +113,16 @@ class NeuralNetworkDetector:
 
     def train_and_evaluate(self):
         # Load and preprocess data
-        df_train_x, df_train_y, df_dev_x, df_dev_y = self.load_data()
-        df_train_x, df_train_y, df_dev_x, df_dev_y = self.preprocess_data(df_train_x, df_train_y, df_dev_x, df_dev_y)
+        df_train_x, df_train_y, df_dev_x, df_dev_y = self.load_data() #data loaded and divided
+
+        
+        df_train_x, df_train_y, df_dev_x, df_dev_y = self.preprocess_data(df_train_x, df_train_y, df_dev_x, df_dev_y) #divided data are preprocessed
 
         # Build and train the network
-        model = self.build_network(input_shape=df_train_x.shape[1:])
+        model = self.build_network(input_shape=df_train_x.shape[1:])  #now building the model for the specific input of data, returns the model with all of its characteristics
         print("Training Neural Network...")
-        history = model.fit(
-            df_train_x,
-            df_train_y,
-            validation_data=(df_dev_x, df_dev_y),
-            epochs=self.epochs,
-            batch_size=self.batch_size,
-            verbose=1  # Shows progress for each epoch
-        )
+        history = model.fit(df_train_x,  df_train_y, epochs=self.epochs,  batch_size=self.batch_size) # Shows progress for each epoch
+        
         
         # Plot accuracy and loss evolution
         self.plot_metrics(history)
@@ -129,40 +131,40 @@ class NeuralNetworkDetector:
         self.evaluate_model(model, df_train_x, df_train_y, df_dev_x, df_dev_y)
 
         # Save the model weights
-        model.save_weights("nn_model_weights.h5")
-        print("Model weights saved to nn_model_weights.h5")
+        #model.save_weights("nn_model_weights.h5")
+        #print("Model weights saved to nn_model_weights.h5")
 
-    def evaluate_model(self, model, X_train, Y_train, X_eval, Y_eval):
+    def evaluate_model(self, model, X_train, Y_train, X_dev, Y_dev):
         # Predictions
-        train_preds = (model.predict(X_train) > 0.5).astype(int)
-        eval_preds = (model.predict(X_eval) > 0.5).astype(int)
+        train_outputs = (model.predict(X_train, batch_size=self.batch_size) > 0.5).astype(int)
+        dev_outputs = (model.predict(X_dev, batch_size=self.batch_size) > 0.5).astype(int)
 
-        # Metrics
-        self.report_metrics(Y_train, train_preds, "Train")
-        self.report_metrics(Y_eval, eval_preds, "Eval")
+        # Final Metrics
+        accuracy_train = accuracy_score(Y_train, train_outputs)
+        accuracy_dev = accuracy_score(Y_dev, dev_outputs)
+        precision_train = precision_score(Y_train, train_outputs)
+        precision_dev = precision_score(Y_dev, dev_outputs)
+        recall_train = recall_score(Y_train, train_outputs)
+        recall_dev = recall_score(Y_dev, dev_outputs)
+        confusion_matrix_train = confusion_matrix(Y_train, train_outputs)
+        confusion_matrix_dev = confusion_matrix(Y_dev, dev_outputs)
 
-    def report_metrics(self, y_true, y_pred, dataset_name):
-        accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred)
-        recall = recall_score(y_true, y_pred)
-        conf_matrix = confusion_matrix(y_true, y_pred)
-
-        print(f"Metrics for {dataset_name} Set:")
-        print(f"Accuracy: {accuracy:.2f}")
-        print(f"Precision: {precision:.2f}")
-        print(f"Recall: {recall:.2f}")
-        print(f"Confusion Matrix:\n{conf_matrix}\n")
-
+        print("Metrics:")
+        print(f"Train Accuracy: {accuracy_train:.2f}, Dev Accuracy: {accuracy_dev:.2f}")
+        print(f"Train Precision: {precision_train:.2f}, Dev Precision: {precision_dev:.2f}")
+        print(f"Train Recall: {recall_train:.2f}, Dev Recall: {recall_dev:.2f}")
+        print(f"Train Confusion Matrix:\n{confusion_matrix_train}")
+        print(f"Dev Confusion Matrix:\n{confusion_matrix_dev}")
       
 
     def plot_metrics(self, history):
         """Plots accuracy and loss evolution"""
         
         # Plot accuracy
-        if "accuracy" in history.history and "val_accuracy" in history.history:
+        if "accuracy" in history.history :
             plt.figure()
             plt.plot(history.history["accuracy"], marker="o", markersize=4, label="Train Accuracy", linestyle='-', color='b')
-            plt.plot(history.history["val_accuracy"], marker="x", markersize=6, label="Validation Accuracy", linestyle='--', color='g')
+            
             plt.title("Model Accuracy Evolution")
             plt.xlabel("Epoch")
             plt.ylabel("Accuracy")
@@ -174,10 +176,10 @@ class NeuralNetworkDetector:
             print("Warning: Accuracy metrics are missing from training history!")
 
         # Plot loss
-        if "loss" in history.history and "val_loss" in history.history:
+        if "loss" in history.history :
             plt.figure()
             plt.plot(history.history["loss"], marker="o", markersize=4, label="Train Loss", linestyle='-', color='b')
-            plt.plot(history.history["val_loss"], marker="x", markersize=6, label="Validation Loss", linestyle='--', color='r')
+            
             plt.title("Model Loss Evolution")
             plt.xlabel("Epoch")
             plt.ylabel("Loss")
