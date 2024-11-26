@@ -1,6 +1,5 @@
-1 layer, 1 neuron
+1 hidden layer, 1 neuron
 
-Saving model...
 train set error 0.5050127776685669
 dev set error 0.5614035087719298
 ------------
@@ -25,7 +24,7 @@ All 0's error dev set 0.008771929824561403
 
 
 
-2 layers, 1 neuron each
+2 hidden layers, 1 neuron each
 
 train set error 0.43758600353843125
 dev set error 0.44561403508771935
@@ -51,7 +50,7 @@ All 0's error dev set 0.008771929824561403
 
 
 
-2 layers, 1 neuron each, 1 dropout layer 0.2
+2 hidden layers, 1 neuron each, 1 dropout layer 0.2
 train set error 0.4452526046785925
 dev set error 0.49298245614035086
 ------------
@@ -76,7 +75,7 @@ All 0's error dev set 0.008771929824561403
 
 
 
-3 layers, 16 neuron each
+3 hidden layers, 16 neuron each
 train set error 0.4157656772164341
 dev set error 0.44385964912280707
 ------------
@@ -101,7 +100,7 @@ All 0's error dev set 0.008771929824561403
 
 
 
-3 layers, 16 neuron each, 3 dropouts
+3 hidden layers, 16 neuron each, 1 dropout layer at 0.2 after every hidden layer
 
 train set error 0.5624139964615686
 dev set error 0.5543859649122806
