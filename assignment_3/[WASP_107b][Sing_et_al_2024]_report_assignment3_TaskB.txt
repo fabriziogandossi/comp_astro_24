@@ -2,6 +2,20 @@
 P: [5.72] #period
 a_Rstar: [18.09] #scaled semi-major axis
 b: [0.12] #transit impact parameter
+Rp: [0.95,0.88] #in jovian radii, obtained with ATMO and NEMESIS retrieval 
+
+#chemistry of the atmosphere
+#for each aboundance there is a vector, showning the value obtained using ATMO and NEMESIS retrieval respectively
+#all the aboundances are in logaritmic scale
+T_atm: [482,474] #atmosfere temperature (K)
+H20: [-1.85,-1,72]
+CO: [-2.70,-3.85]
+CO2: [-3.33,-2.62]
+CH4: [-6.03,-6,14]
+SO2: [-5.06,-4.59]
+H2S: [-3.48,-7.10]
+NH3: [-6.38,-8.12]
+HCN: [-9.12] #for this molecule there is only the value obtained with NEMES retrival
 
 #Parameters for the star WASP-107
 T: [4425] #kelvin
