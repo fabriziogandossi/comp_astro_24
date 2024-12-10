@@ -2,7 +2,10 @@ import datetime
 import argparse
 from daneel.parameters import Parameters
 from daneel.detection.transit import plot_transit
-
+from daneel.detection.svm import SVMExoplanetDetector
+from daneel.detection.nn import NeuralNetworkDetector
+from daneel.detection.atmosphere import ForwardModel
+#from daneel.detection.atmosphere import Retrieval
 
 def main():
     parser = argparse.ArgumentParser()
@@ -14,24 +17,25 @@ def main():
         type=str,
         required=True,
         help="Input par file to pass",
-    )
-
+   )
+    
     parser.add_argument(
         "-d",
         "--detect",
         dest="detect",
+        type=str,
         required=False,
-        help="Initialise detection algorithms for Exoplanets",
-        action="store_true",
+        choices=["svm", "nn", "cnn"],
+        help="Specify the detection method to use.",
     )
 
     parser.add_argument(
         "-a",
         "--atmosphere",
-        dest="complete",
+        dest="atmosphere",
         required=False,
+        choices=["model", "retrieve"],
         help="Atmospheric Characterisazion from input transmission spectrum",
-        action="store_true",
     )
 
     parser.add_argument(
@@ -56,8 +60,38 @@ def main():
 
     if args.detect:
         pass
+    
+    if args.atmosphere:
+        if args.atmosphere=="model":
+            fm = ForwardModel(args.input_file)
+            fm.run()
+    
     #if args.atmosphere:
-    #   pass
+    #    if args.atmosphere=="retrieve":
+    #        fm = Retrieval(args.input_file)
+    #        fm.run()
+
+    if args.detect:
+        if args.detect == "svm":
+            # Fetch dataset paths for training and evaluation
+            train_dataset_path = input_pars.get("train_dataset_path", "")
+            eval_dataset_path = input_pars.get("eval_dataset_path", "")
+            kernel = input_pars.get("kernel", "linear")
+
+            # Initialize and run the SVM detector
+            detector = SVMExoplanetDetector(
+                kernel=kernel,
+                train_dataset_path=train_dataset_path,
+                eval_dataset_path=eval_dataset_path,
+            )
+            detector.train_and_evaluate()
+
+    if args.detect:
+        if args.detect == "nn":
+            nn_params = input_pars.get("nn", {})
+            detector = NeuralNetworkDetector(**nn_params)
+            detector.train_and_evaluate()
+
 
     finish = datetime.datetime.now()
     print(f"Daneel finishes at {finish}")

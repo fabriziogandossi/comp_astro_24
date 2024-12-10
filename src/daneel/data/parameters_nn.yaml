@@ -1,0 +1,8 @@
+nn:
+  train_dataset_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/data_no_injection/exoTrain.csv" 
+  eval_dataset_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/data_no_injection/exoTest.csv"
+  layers: [1]  # Neurons per hidden layer
+  dropouts: []  # Dropout rates after each hidden layer
+  epochs: 100  # Number of training epochs
+  batch_size: 32  # Batch size
+  learning_rate: 0.005  # Learning rate

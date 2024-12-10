@@ -1,0 +1,29 @@
+paths:
+	opacity_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/xsecs"
+	cia_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/cia/hitran"
+
+	spectrum_file: /path/to/observed/spectrum.dat
+	output_file: /path/to/output/retrieved_spectrum.dat
+
+planet_radius_bounds: [0.8, 2.1]
+temperature_bounds: [1000, 2000]
+
+planet_parameters:
+  radius: 1.27  # Jupiter radii
+  mass: 0.46    # Jupiter masses
+
+star_parameters:
+  radius: 0.79  # Solar radii
+  temperature: 5700  # Kelvin
+
+temperature_profile:
+  model: Guillot2010
+  T_irr: 1200.0  # Kelvin
+
+chemistry:
+  gases:
+    - H2O
+    - CH4
+    - CO2
+    - CO
+  abundance_bounds: [-8, -2]

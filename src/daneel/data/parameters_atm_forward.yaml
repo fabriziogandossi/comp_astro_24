@@ -1,0 +1,25 @@
+paths:
+  opacity_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/xsecs"
+  cia_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/cia/hitran"
+
+planet:
+  name: "WASP-52b"
+  radius: 1.27  # Jupiter radii
+  mass: 0.46    # Jupiter masses
+
+star:
+  radius: 0.79  # Solar radii
+  temperature: 5700.0  # Kelvin
+
+temperature:
+  T_irr: 1200.0  # Irradiation temperature
+
+chemistry:
+  gases:
+    H2O: 7e-5
+    CH4: 4.6e-4
+    CO2: 3e-6
+    CO: 2e-6
+
+output:
+  file_name: "WASP-52b_assignment3_taskA_spectrum.dat"
