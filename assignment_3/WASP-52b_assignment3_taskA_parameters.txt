@@ -1,4 +1,4 @@
-# Parameters for the WASP-52 b transit model
+# Parameters for the WASP-52 b forward modelling of the atmosphere with Taurex
 
 t0: [0.0,0.0,0.0]  # Time of inferior conjunction (days)
 per: [1.74977083, 1.74977083, 1.74977083] # Orbital period (days)
