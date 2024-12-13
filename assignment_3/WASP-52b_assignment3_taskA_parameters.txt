@@ -15,8 +15,7 @@ R_star: [0.79,0.79,0.79] #in sun radii
 
 #Parameters for the star WASP-52
 name: "WASP-52"
-T: [5000.00] #kelvin
-R_star: [0.79] #sun radii
-Fe_H: [0.030] #dex
-M_star: [0.870] #in solar mass
-log_g: [4.5] #log_10(cm/s^2)
+T: 5000.00 #kelvin
+R_star: 0.79 #sun radii
+M_star: 0.870 #in solar mass
+log_g: 4.5 #log_10(cm/s^2)

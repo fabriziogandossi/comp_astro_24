@@ -1,8 +1,8 @@
-# Parameters for the WASP-107 b transit model from Sing et al. 2024
-P: [5.72] #period
-a_Rstar: [18.09] #scaled semi-major axis
-b: [0.12] #transit impact parameter
-Rp: [0.95,0.88] #in jovian radii, obtained with ATMO and NEMESIS retrieval 
+#Paramters of WASP-107b
+rp: 0.94 #Jupiter radii
+per: 5.72 #orbital period
+inc: 89.7 #orbital inclination (deg)
+e: 0.0 #eccentricity
 
 #chemistry of the atmosphere
 #for each aboundance there is a vector, showning the value obtained using ATMO and NEMESIS retrieval respectively
@@ -12,17 +12,9 @@ H20: [-1.85,-1,72]
 CO: [-2.70,-3.85]
 CO2: [-3.33,-2.62]
 CH4: [-6.03,-6,14]
-SO2: [-5.06,-4.59]
-H2S: [-3.48,-7.10]
-NH3: [-6.38,-8.12]
-HCN: [-9.12] #for this molecule there is only the value obtained with NEMES retrival
 
 #Parameters for the star WASP-107
-T: [4425] #kelvin
-Fe_H: [0.020] #dex
-M_star: [0.68] #in solar mass
-R_star: [0.67] #in solar radii
-log_g: [4.63] #log_10(cm/s^2)
-L_star: [-0.88] #log_10(L_sun)
-P_rot: [17] #days
-Age: [3.4] #Gyr
+T: 4425 #kelvin
+M_star: 0.68 #in solar mass
+R_star: 0.67 #in solar radii
+log_g: 4.63 #log_10(cm/s^2)
