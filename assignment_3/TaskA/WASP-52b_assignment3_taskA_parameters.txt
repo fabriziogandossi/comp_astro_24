@@ -1,0 +1,14 @@
+# WASP-52 b atmosphere: planet parameters
+name_planet: "WASP-52 b"
+rp: 1.27  # Planet radius in Jupiter radii 
+mp: 0.46  # Planet mass in Jupiter masses
+gases: [H2O, CH4, CO2, CO]           #gases introduced for the model
+abundances: [1.12e-04 , 1.64e-06 , 2.66e-03 , 1.53e-05]  #abundance of the gases
+
+#Stellar parameters
+name_star: "WASP-52"
+R_star: 0.79 #in sun radii
+T_star: 5000.00 #kelvin
+Fe_H: 0.030 #dex
+M_star: 0.870 #in solar mass
+log_g: 4.5 #log_10(cm/s^2)
