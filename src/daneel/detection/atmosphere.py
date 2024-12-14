@@ -37,7 +37,7 @@ class ForwardModel:
     def create_model(self):
         self.setup_paths()
 
-        # Define planet, star, and temperature profile
+        # Define planet and star
         planet = Planet(
             planet_radius=self.planet_params["radius"],
             planet_mass=self.planet_params["mass"],
@@ -46,7 +46,17 @@ class ForwardModel:
             temperature=self.star_params["temperature"],
             radius=self.star_params["radius"],
         )
-        guillot = Guillot2010(T_irr=self.temperature_params["T_irr"])
+
+        # Determine the temperature profile based on YAML configuration
+        profile_type = self.temperature_params.get("profile", "guillot")  # Default to "guillot" if not specified
+
+        if profile_type == "isothermal":
+            # Create an isothermal profile (assuming you have a class or method for that)
+            temperature_profile = Isothermal(T=self.temperature_params["T_irr"])
+        elif profile_type == "guillot":
+            temperature_profile = Guillot2010(T_irr=self.temperature_params["T_irr"])
+        else:
+            raise ValueError(f"Unknown temperature profile type: {profile_type}")
 
         # Set up chemistry with the elements and abundances from the .yaml file
         chemistry = TaurexChemistry()
@@ -62,7 +72,7 @@ class ForwardModel:
         # Create the transmission model
         model = TransmissionModel(
             planet=planet,
-            temperature_profile=guillot,
+            temperature_profile=temperature_profile,  # Use the selected temperature profile
             chemistry=chemistry,
             star=star,
             atm_min_pressure=1e-2,
@@ -73,8 +83,11 @@ class ForwardModel:
         model.add_contribution(AbsorptionContribution())
         model.add_contribution(RayleighContribution())
         model.build()
+        model.model()
 
         return model
+
+
 
     def save_spectrum(self, model):
         #res = model.model()
@@ -111,121 +124,183 @@ class ForwardModel:
 
 
 
-
 class Retrieval:
-    def __init__(self, yaml_file):
-        self.params = self.load_yaml(yaml_file)
-        self.spectrum_file = self.params["paths"]["observed_spectrum"]
-        self.output_file = self.params["output"]["retrieved_file"]
-        self.planet_params = self.params["planet"]
-        self.star_params = self.params["star"]
-        self.temperature_params = self.params["temperature"]
-        self.chemistry_params = self.params["chemistry"]
-        self.fit_params = self.params["retrieval"]["fit_params"]
+    def __init__(self, config_path):
+        """
+        Initialize the Retrieval using a configuration file.
 
-    def load_yaml(self, yaml_file):
-        with open(yaml_file, "r") as file:
-            return yaml.safe_load(file)
+        Parameters:
+        config_path (str): Path to the YAML configuration file.
+        """
+        with open(config_path, 'r') as file:
+            self.config = yaml.safe_load(file)
 
-    def setup_paths(self):
+        self.planet = None
+        self.star = None
+        self.temperature_profile = None
+        self.chemistry = None
+        self.model = None
+        self.optimizer = None
+        self.obs = None
+
+    def setup_environment(self):
+        """
+        Set up the opacity and CIA paths from the configuration.
+        """
+        opacity_path = self.config['paths']['opacity']
+        cia_path = self.config['paths']['cia']
+
         OpacityCache().clear_cache()
-        OpacityCache().set_opacity_path(self.params["paths"]["opacity_path"])
-        CIACache().set_cia_path(self.params["paths"]["cia_path"])
+        OpacityCache().set_opacity_path(opacity_path)
+        CIACache().set_cia_path(cia_path)
 
-    def create_model(self):
-        self.setup_paths()
-
-        # Define planet, star, and temperature profile
-        planet = Planet(
-            planet_radius=self.planet_params["radius"],
-            planet_mass=self.planet_params["mass"],
-        )
-        star = BlackbodyStar(
-            temperature=self.star_params["temperature"],
-            radius=self.star_params["radius"],
+    def setup_star_and_planet(self):
+        """
+        Initialize the star and planet instances.
+        """
+        star_params = self.config['star']
+        self.star = BlackbodyStar(
+            temperature=star_params['temperature'],
+            radius=star_params['radius']
         )
 
-        # Create temperature profile
-        if self.temperature_params["model"] == "Guillot2010":
-            temperature_profile = Guillot2010(
-                T_irr=self.temperature_params["T_irr"]
-            )
+        self.planet = Planet()
+
+    def setup_temperature_profile(self):
+        """
+        Initialize the temperature profile based on the configuration.
+        """
+        temp_profile = self.config['atmosphere']['temperature_profile']
+        temp_type = temp_profile['type']
+        
+        if temp_type == 'Guillot2010':
+            self.temperature_profile = Guillot2010(T_irr=self.temperature_params.get('T_irr', 1500.0))  # Provide default if not specified
+        elif temp_type == 'Isothermal':
+            T = temp_profile.get('T', 1000)  # Replace with the default temperature if necessary
+            self.temperature_profile = Isothermal(T)  # Initialize with temperature only
+            
+            # If `Isothermal` requires layers to be set, find the appropriate way to do that.
+            # Check if there is a method to set layers or if it has a public attribute.
+            self.temperature_profile.nlayers = self.config['atmosphere'].get('nlayers', 30)  # Set nlayers if allowed
+            
         else:
-            temperature_profile = Isothermal(
-                T=self.temperature_params.get("T", 1500.0)
-            )
+            raise ValueError(f"Unsupported temperature profile type: {temp_type}")
 
-        # Set up chemistry
-        chemistry = TaurexChemistry()
-        for gas_name, abundance in self.chemistry_params["gases"].items():
-            try:
-                abundance = float(abundance)
-                chemistry.addGas(ConstantGas(gas_name, mix_ratio=abundance))
-            except ValueError:
-                raise ValueError(
-                    f"Invalid abundance for {gas_name}: {abundance}. It must be a number."
-                )
 
-        # Create the transmission model
-        model = TransmissionModel(
-            planet=planet,
-            temperature_profile=temperature_profile,
-            chemistry=chemistry,
-            star=star,
-            atm_min_pressure=1e-0,
-            atm_max_pressure=1e6,
-            nlayers=30,
+
+    def setup_chemistry(self):
+        # Retrieve gas names and abundances from the configuration
+        chemistry = TaurexChemistry() 
+        gas_name = self.config['chemistry']['gases']['names']
+        gas_abundance = self.config['chemistry']['gases']['abundances']
+        
+        for i in range(len(gas_name)):
+            chemistry.addGas(ConstantGas(gas_name[i], mix_ratio = gas_abundance[i]))
+
+
+    def setup_model(self):
+        """
+        Build the transmission model with the provided components.
+        """
+        atm_params = self.config['atmosphere']
+
+        self.model = TransmissionModel(
+            planet=self.planet,
+            chemistry=self.chemistry,
+            star=self.star,
+            atm_min_pressure=float(atm_params['pressure_min']),
+            atm_max_pressure=float(atm_params['pressure_max']),
+            nlayers=atm_params['nlayers'],
+            temperature_profile=self.temperature_profile
         )
 
-        model.add_contribution(AbsorptionContribution())
-        model.add_contribution(RayleighContribution())
-        model.add_contribution(CIAContribution(cia_pairs=["H2-H2", "H2-He"]))
-        model.build()
+        # Add contributions
+        self.model.add_contribution(RayleighContribution())
+        self.model.add_contribution(AbsorptionContribution())
+        self.model.build()
+        self.model.model()
 
-        return model
+    def load_observed_spectrum(self):
+        """
+        Load the observed spectrum from the configuration.
+        """
+        spectrum_path = self.config['paths']['observed_spectrum']
+        self.obs = ObservedSpectrum(spectrum_path)
+
+    def setup_optimizer(self):
+        """
+        Initialize the optimizer and enable fitting parameters.
+        """
+        self.optimizer = NestleOptimizer(
+            num_live_points=self.config['optimizer']['num_live_points'],
+            method=self.config['optimizer']['method'],
+            tol=self.config['optimizer']['tol']
+        )
+
+        self.optimizer.set_model(self.model)
+        self.optimizer.set_observed(self.obs)
+
+        for i in range(len(self.config['fit_parameters']['names'])):
+            parameter=self.config['fit_parameters']['names'][i]
+            boundary=self.config['fit_parameters']['boundaries'][i]
+            self.optimizer.enable_fit(parameter)
+            self.optimizer.set_boundary(parameter,boundary)
 
     def run(self):
-        # Load and configure the observed spectrum
-        obs = ObservedSpectrum(self.spectrum_file)
-        obin = obs.create_binner()
+        """
+        Execute the retrieval process.
+        """
+        self.setup_environment()
+        self.setup_star_and_planet()
+        self.setup_temperature_profile()
+        self.setup_chemistry()
+        self.setup_model()
+        self.load_observed_spectrum()
+        self.setup_optimizer()
+        solution = self.optimizer.fit()
+        self.plot_observed_spectrum()
+        self.plot_results(solution)
 
-        # Create the model
-        model = self.create_model()
+    def plot_observed_spectrum(self):
+        """
+        Plot the observed spectrum.
+        """
+        plt.figure()
+        plt.errorbar(self.obs.wavelengthGrid, self.obs.spectrum, self.obs.errorBar, label='Observed Spectrum')
+        plt.title('Observed Spectrum')
+        plt.xscale('log')
+        plt.xlabel('log($\mu$m)')
+        plt.ylabel('Absorbed relative flux')
+        plt.grid()
+        plt.legend()
+        plt.show()
 
-        # Set up the optimizer
-        opt = NestleOptimizer(num_live_points=50)
-        opt.set_model(model)
-        opt.set_observed(obs)
+    def plot_results(self, solution):
+        """
+        Plot the best-fit model and residuals.
+        """
+        obin = self.obs.create_binner()
+        for solution, optimized_map, _, _ in self.optimizer.get_solution():
+            self.optimizer.update_model(optimized_map)
+            model_spectrum = obin.bin_model(self.model.model(self.obs.wavenumberGrid))[1]
+            residuals = self.obs.spectrum - model_spectrum
 
-        # Enable fitting for specified parameters
-        for param, bounds in self.fit_params.items():
-            opt.enable_fit(param)
-            opt.set_boundary(param, bounds)
+            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6), gridspec_kw={'height_ratios': [3, 1]})
+            
+            ax1.errorbar(self.obs.wavelengthGrid, self.obs.spectrum, yerr=self.obs.errorBar, label='Observed')
+            ax1.plot(self.obs.wavelengthGrid, model_spectrum, label='Best Fit', color='r')
+            ax1.set_xscale('log')
+            ax1.set_title('Best-Fit Spectrum')
+            ax1.legend()
+            ax1.grid(True)
 
-        # Run optimization
-        solution = opt.fit()
+            ax2.errorbar(self.obs.wavelengthGrid, residuals, yerr=self.obs.errorBar, fmt='o')
+            ax2.set_xscale('log')
+            ax2.set_xlabel('log($\mu$m)')
+            ax2.set_ylabel('Residuals')
+            ax2.grid(True)
 
-        # Save and plot the retrieved spectrum
-        for solution, optimized_map, optimized_value, values in opt.get_solution():
-            opt.update_model(optimized_map)
-
-            # Save the retrieved spectrum
-            wavelength, rprs, rprs_err = obs.wavelengthGrid, obs.spectrum, obs.errorBar
-            np.savetxt(
-                self.output_file,
-                np.column_stack([wavelength, rprs, rprs_err]),
-                header="Wavelength(micron) (Rp/Rs)^2 sqrt((Rp/Rs)^2)",
-                fmt="%.6e",
-            )
-            print(f"Retrieved spectrum saved to {self.output_file}")
-
-            # Plot the results
-            plt.figure()
-            plt.errorbar(wavelength, rprs, yerr=rprs_err, label="Observed")
-            plt.plot(
-                wavelength,
-                obin.bin_model(model.model(obs.wavenumberGrid))[1],
-                label="Retrieved",
-            )
-            plt.legend()
+            plt.tight_layout()
             plt.show()
+
+

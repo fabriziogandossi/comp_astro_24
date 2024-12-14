@@ -13,6 +13,7 @@ star:
 
 temperature:
   T_irr: 1200.0  # Irradiation temperature
+  profile: "guillot"  # Options: "guillot" or "isothermal"
 
 chemistry:
   gases:
@@ -23,3 +24,4 @@ chemistry:
 
 output:
   file_name: "WASP-52b_assignment3_taskA_spectrum.dat"
+

@@ -5,7 +5,7 @@ from daneel.detection.transit import plot_transit
 from daneel.detection.svm import SVMExoplanetDetector
 from daneel.detection.nn import NeuralNetworkDetector
 from daneel.detection.atmosphere import ForwardModel
-#from daneel.detection.atmosphere import Retrieval
+from daneel.detection.atmosphere import Retrieval
 
 def main():
     parser = argparse.ArgumentParser()
@@ -66,10 +66,10 @@ def main():
             fm = ForwardModel(args.input_file)
             fm.run()
     
-    #if args.atmosphere:
-    #    if args.atmosphere=="retrieve":
-    #        fm = Retrieval(args.input_file)
-    #        fm.run()
+    if args.atmosphere:
+        if args.atmosphere=="retrieve":
+            fm = Retrieval(args.input_file)
+            fm.run()
 
     if args.detect:
         if args.detect == "svm":

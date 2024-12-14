@@ -1,29 +1,57 @@
+# Paths to required data
 paths:
-	opacity_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/xsecs"
-	cia_path: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/cia/hitran"
+  opacity: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/xsecs"
+  cia: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/Taurex/data/cia/hitran"
+  observed_spectrum: "/home/silvia/Desktop/Magistrale/Esami_da_dare/Computational_astrophysics/comp_astro_24/assignment_3/TaskA/WASP-52b_assignment3_taskA_spectrum.dat"
 
-	spectrum_file: /path/to/observed/spectrum.dat
-	output_file: /path/to/output/retrieved_spectrum.dat
+# Stellar parameters
+star:
+  radius: 0.79            # Solar radii
+  temperature: 5000.0     # Kelvin
 
-planet_radius_bounds: [0.8, 2.1]
-temperature_bounds: [1000, 2000]
+# Planet parameters
+planet:
+  mass: 1.0               # Jupiter masses (optional)
+  radius: 1.0             # Jupiter radii (optional)
 
-planet_parameters:
-  radius: 1.27  # Jupiter radii
-  mass: 0.46    # Jupiter masses
+# Atmosphere parameters
+atmosphere:
+  pressure_min: 1e-0      # Minimum pressure in the atmosphere (bar)
+  pressure_max: 1e6       # Maximum pressure in the atmosphere (bar)
+  nlayers: 30             # Number of atmospheric layers
+  temperature_profile:    # Temperature profile type and parameters
+    type: "Isothermal"
+    parameters:
+      T: 1500.0
 
-star_parameters:
-  radius: 0.79  # Solar radii
-  temperature: 5700  # Kelvin
 
-temperature_profile:
-  model: Guillot2010
-  T_irr: 1200.0  # Kelvin
-
+# Active gases and initial abundances
 chemistry:
   gases:
-    - H2O
-    - CH4
-    - CO2
-    - CO
-  abundance_bounds: [-8, -2]
+    names: ["H2O", "CH4", "CO2", "CO"]
+    abundances: [1e-5, 1e-5, 1e-5, 1e-5]
+
+
+# Contributions
+contributions:
+  - type: "RayleighContribution"
+  - type: "AbsorptionContribution"
+
+# Optimizer settings
+optimizer:
+  type: "NestleOptimizer"
+  num_live_points: 50
+  method: "multi"
+  tol: 20
+
+# Fitting parameters and boundaries
+fit_parameters:
+  names: ["T", "planet_radius"] #, "H2O", "CH4", "CO2", "CO"]
+  boundaries: [[1000, 3000], [0.8, 1.5]] #, [1e-8, 1e-2], [1e-8, 1e-2], [1e-8, 1e-2], [1e-8, 1e-2]]
+
+
+# Output settings
+output:
+  spectrum_png: "retrieved_spectrum.png"
+  spectrum_dat: "retrieved_spectrum.dat"
+
