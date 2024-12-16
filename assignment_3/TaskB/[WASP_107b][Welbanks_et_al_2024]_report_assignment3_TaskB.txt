@@ -1,0 +1,20 @@
+#WASP-107 b : planet parameters from Welbanks et al. 2024
+rp: 0.98 #Jupiter radii
+per: 5.72 #orbital period
+inc: 89.7 #orbital inclination (deg)
+e: 0.0 #eccentricity
+
+#chemistry of the atmosphere
+#for each aboundance there is a vector, showning the value obtained using CHIMERA and Aurora retrieval respectively
+#all the aboundances are in logaritmic scale
+T_atm: [525,447] #atmosfere temperature (K)
+H20: [-2.1,-2.6]
+CO: [-1.9,-3.0]
+CO2: [-3.9,-4.4]
+CH4: [-5.8,-2.6]
+
+#Parameters for the star WASP-107
+T: 4425 #kelvin
+M_star: 0.68 #in solar mass
+R_star: 0.67 #in solar radii
+log_g: 4.63 #log_10(cm/s^2)
