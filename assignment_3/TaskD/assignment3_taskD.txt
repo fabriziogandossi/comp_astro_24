@@ -1,0 +1,11 @@
+Parameter     True Value    MAP Estimate (MultiNest)  Upper Error (MultiNest)  Lower Error (MultiNest)   
+
+Radius          [0.98,1.01]       0.93                	  +0.00           	     -0.01                  
+T               [525,447]         893            	  +118           	     -276                       
+H2O             [-2.1,-2.6]      -5.56              	  +2.57        	             -0.32                          
+CH4             [-1.9,-3.0]      -8.93               	  +3.21        	             -0.03                       
+CO2             [-3.9,-4.4]      -5.76              	  +2.64       	             -0.52                        
+CO              [-5.8,-2.6]      -8.83             	  +4.56        	             -0.29                       
+
+
+#for the true values of temperature and chemical abundances we report a vector with the values obtained using CHIMERA and Aurora retrieval respectively (see Welbanks et al. 2024). The error bars for the true values are reported in the file [WASP_107b][Welbanks_et_al_2024]_report_assignment3_TaskB.txt.
