@@ -13,7 +13,7 @@ from taurex.optimizer.nestle import NestleOptimizer
 from taurex.contributions import AbsorptionContribution, RayleighContribution, CIAContribution
 
 
-
+#Defining a class to generate a forward model with Taurex
 class ForwardModel:
     def __init__(self, yaml_file):  #giving the .yaml file in input
         self.params = self.load_yaml(yaml_file)
@@ -38,14 +38,8 @@ class ForwardModel:
         self.setup_paths()
 
         # Define planet and star
-        planet = Planet(
-            planet_radius=self.planet_params["radius"],
-            planet_mass=self.planet_params["mass"],
-        )
-        star = BlackbodyStar(
-            temperature=self.star_params["temperature"],
-            radius=self.star_params["radius"],
-        )
+        planet = Planet(planet_radius=self.planet_params["radius"],planet_mass=self.planet_params["mass"])
+        star = BlackbodyStar(temperature=self.star_params["temperature"], radius=self.star_params["radius"] )
 
         # Determine the temperature profile based on YAML configuration
         profile_type = self.temperature_params.get("profile", "guillot")  # Default to "guillot" if not specified
@@ -80,7 +74,7 @@ class ForwardModel:
             nlayers=30,
         )
 
-        model.add_contribution(AbsorptionContribution())
+        model.add_contribution(AbsorptionContribution())  #adding contributions to the atmosphere
         model.add_contribution(RayleighContribution())
         model.build()
         model.model()
@@ -90,9 +84,6 @@ class ForwardModel:
 
 
     def save_spectrum(self, model):
-        #res = model.model()
-        #native_grid, rprs, tau, _ = res
-
         wngrid = np.sort(10000/np.logspace(-0.4,1.1,200))
         bn = SimpleBinner(wngrid=wngrid)
         bin_wn, bin_rprs,_,_  = bn.bin_model(model.model(wngrid=wngrid))
@@ -109,7 +100,6 @@ class ForwardModel:
         spectrum_data = np.column_stack((10000/bin_wn , rprs_squared, rprs_sqrt))
 
         # Save the spectrum
-        
         np.savetxt(
             self.output_file,
             spectrum_data,
@@ -123,15 +113,13 @@ class ForwardModel:
         self.save_spectrum(model)
 
 
-
+#Define a class to perform a retrieval with Taurex
 class Retrieval:
     def __init__(self, config_path):
-        """
-        Initialize the Retrieval using a configuration file.
+        
+        #Initialize the Retrieval using a configuration file.
 
-        Parameters:
-        config_path (str): Path to the YAML configuration file.
-        """
+    
         with open(config_path, 'r') as file:
             self.config = yaml.safe_load(file)
 
@@ -154,10 +142,7 @@ class Retrieval:
         OpacityCache().set_opacity_path(opacity_path)
         CIACache().set_cia_path(cia_path)
 
-    def setup_star_and_planet(self):
-        """
-        Initialize the star and planet instances.
-        """
+    def setup_star_and_planet(self):        #Initialize the star and planet instances.        
         star_params = self.config['star']
         self.star = BlackbodyStar(
             temperature=star_params['temperature'],
@@ -167,9 +152,6 @@ class Retrieval:
         self.planet = Planet()
 
     def setup_temperature_profile(self):
-        """
-        Initialize the temperature profile based on the configuration.
-        """
         temp_profile = self.config['atmosphere']['temperature_profile']
         temp_type = temp_profile['type']
         
@@ -179,8 +161,6 @@ class Retrieval:
             T = temp_profile.get('T', 1000)  # Replace with the default temperature if necessary
             self.temperature_profile = Isothermal(T)  # Initialize with temperature only
             
-            # If `Isothermal` requires layers to be set, find the appropriate way to do that.
-            # Check if there is a method to set layers or if it has a public attribute.
             self.temperature_profile.nlayers = self.config['atmosphere'].get('nlayers', 30)  # Set nlayers if allowed
             
         else:
@@ -198,10 +178,8 @@ class Retrieval:
             chemistry.addGas(ConstantGas(gas_name[i], mix_ratio = gas_abundance[i]))
 
 
-    def setup_model(self):
-        """
-        Build the transmission model with the provided components.
-        """
+    def setup_model(self):                  #Build the transmission model with the provided components.
+        
         atm_params = self.config['atmosphere']
 
         self.model = TransmissionModel(
