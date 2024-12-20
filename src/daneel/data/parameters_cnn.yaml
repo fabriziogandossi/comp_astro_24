@@ -1,0 +1,6 @@
+train_dataset_path: "/home/fabrizio/Desktop/computational_astrophyisics/assignment2/data_injected/exoTrain.csv" 
+eval_dataset_path: "/home/fabrizio/Desktop/computational_astrophyisics/assignment2/data_injected/exoTest.csv"
+epochs: 100  # Number of training epochs
+batch_size: 32  # Batch size
+learning_rate: 0.005  # Learning rate
+

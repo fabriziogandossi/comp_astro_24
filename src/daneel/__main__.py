@@ -4,6 +4,7 @@ from daneel.parameters import Parameters
 from daneel.detection.transit import plot_transit
 from daneel.detection.svm import SVMExoplanetDetector
 from daneel.detection.nn import NeuralNetworkDetector
+from daneel.detection.cnn import CNNPipeline
 from daneel.detection.atmosphere import ForwardModel
 from daneel.detection.atmosphere import Retrieval
 
@@ -91,6 +92,17 @@ def main():
             nn_params = input_pars.get("nn", {})
             detector = NeuralNetworkDetector(**nn_params)
             detector.train_and_evaluate()
+            
+    if args.detect == "cnn":
+            print("Using CNN for detection...")
+            pipeline = CNNPipeline(
+				train_path=input_pars['train_dataset_path'],
+                eval_path=input_pars['eval_dataset_path'],
+				batch_size=input_pars['batch_size'],
+				learning_rate=input_pars['learning_rate'],
+				epochs=input_pars['epochs']
+    		)
+            pipeline.run()
 
 
     finish = datetime.datetime.now()
