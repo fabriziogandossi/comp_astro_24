@@ -100,7 +100,8 @@ def main():
                 eval_path=input_pars['eval_dataset_path'],
 				batch_size=input_pars['batch_size'],
 				learning_rate=input_pars['learning_rate'],
-				epochs=input_pars['epochs']
+				epochs=input_pars['epochs'],
+				kernel_size=input_pars['kernel_size']
     		)
             pipeline.run()
 

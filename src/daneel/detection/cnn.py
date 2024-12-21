@@ -138,13 +138,13 @@ class DataCubeDataset(Dataset):
         return torch.tensor(image, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
 
 class SimpleCNN(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, kernel_size):
         super(SimpleCNN, self).__init__()
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(1, 32, kernel_size=kernel_size, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(32, 64, kernel_size=kernel_size, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
@@ -162,10 +162,11 @@ class SimpleCNN(nn.Module):
         return x
 
 class CNNPipeline:
-    def __init__(self, train_path, eval_path, batch_size=32, learning_rate=0.001, epochs=20):
+    def __init__(self, train_path, eval_path, batch_size=32, kernel_size = 3, learning_rate=0.001, epochs=20):
         self.train_path = train_path
         self.eval_path = eval_path
         self.batch_size = batch_size
+        self.kernel_size = kernel_size
         self.learning_rate = learning_rate
         self.epochs = epochs
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -190,7 +191,7 @@ class CNNPipeline:
         return labels_train, labels_eval, cube_train, cube_eval
 
     def train_model(self, train_loader, val_loader):
-        model = SimpleCNN(num_classes=2).to(self.device)
+        model = SimpleCNN(num_classes=2, kernel_size=self.kernel_size).to(self.device)
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
 
